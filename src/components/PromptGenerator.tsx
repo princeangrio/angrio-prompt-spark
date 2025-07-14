@@ -226,14 +226,12 @@ ${template.colors}
     generatedPrompts.forEach((prompt, index) => {
       const fullPrompt = `${prompt.finalCopy}\n\n${prompt.imagePrompt}\n\n${prompt.designNotes}`;
       const encodedPrompt = encodeURIComponent(fullPrompt);
-      const chatUrl = model === 'gpt-4o' 
-        ? `https://chat.openai.com/?model=gpt-4o&q=${encodedPrompt}`
-        : `https://chat.openai.com/?model=gpt-3.5-turbo&q=${encodedPrompt}`;
+      const chatUrl = `https://chatgpt.com/?q=${encodedPrompt}`;
       
       // Delay each tab opening to prevent browser blocking
       setTimeout(() => {
-        window.open(chatUrl, `_blank_${index}`);
-      }, index * 500);
+        window.open(chatUrl, '_blank');
+      }, index * 300);
     });
 
     toast({
