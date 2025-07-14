@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Wand2, ExternalLink, Copy, Brain, Zap } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Wand2, ExternalLink, Copy, Brain, Zap, Upload, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface GeneratedPrompt {
@@ -21,6 +22,8 @@ const PromptGenerator = () => {
   const [quantity, setQuantity] = useState<string>('3');
   const [generatedPrompts, setGeneratedPrompts] = useState<GeneratedPrompt[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [referenceFile, setReferenceFile] = useState<File | null>(null);
+  const [referencePreview, setReferencePreview] = useState<string | null>(null);
   const { toast } = useToast();
 
   const detectPostType = (content: string): string => {
@@ -153,6 +156,8 @@ DESIGN APPROACH: ${template.style}
 
 CONTENT FOCUS: ${postType === 'hiring' ? 'professional recruitment and career opportunities' : postType === 'statistics' ? 'data visualization and business metrics' : postType === 'awareness' ? 'educational and informational content' : 'general business promotion'}
 
+${referenceFile ? `REFERENCE STYLE: Use the uploaded reference image as inspiration for visual style, layout composition, and design elements. Adapt the reference design to match Angrio's branding while maintaining similar visual appeal and structure.` : ''}
+
 VISUAL ELEMENTS: 
 - Hero graphics: ${template.hero}
 - Angrio Technologies logo placement (adapt to layout style)
@@ -223,21 +228,63 @@ ${template.colors}
   };
 
   const handleOpenInTabs = () => {
-    generatedPrompts.forEach((prompt, index) => {
+    if (generatedPrompts.length === 0) {
+      toast({
+        title: "No prompts generated",
+        description: "Please generate prompts first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const selectedQuantity = parseInt(quantity);
+    const promptsToOpen = generatedPrompts.slice(0, selectedQuantity);
+    
+    promptsToOpen.forEach((prompt, index) => {
       const fullPrompt = `${prompt.finalCopy}\n\n${prompt.imagePrompt}\n\n${prompt.designNotes}`;
       const encodedPrompt = encodeURIComponent(fullPrompt);
       const chatUrl = `https://chatgpt.com/?q=${encodedPrompt}`;
       
       // Delay each tab opening to prevent browser blocking
       setTimeout(() => {
-        window.open(chatUrl, '_blank');
-      }, index * 300);
+        window.open(chatUrl, `_blank_${index}`);
+      }, index * 500);
     });
 
     toast({
       title: "Opening Prompts",
-      description: `Opening ${generatedPrompts.length} tabs with your generated prompts.`,
+      description: `Opening ${selectedQuantity} tabs with your generated prompts.`,
     });
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.type.startsWith('image/')) {
+        setReferenceFile(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setReferencePreview(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+        
+        toast({
+          title: "Reference uploaded",
+          description: "Reference image will be used to generate similar designs.",
+        });
+      } else {
+        toast({
+          title: "Invalid file",
+          description: "Please upload an image file (JPG, PNG, etc.)",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  const removeReference = () => {
+    setReferenceFile(null);
+    setReferencePreview(null);
   };
 
   const copyAllPrompts = () => {
@@ -307,6 +354,53 @@ ${template.colors}
                 <p className="text-sm text-muted-foreground mt-2">
                   Auto-assigns Angrio layout, fonts, color palette, and post type
                 </p>
+              </CardContent>
+            </Card>
+
+            {/* Reference Upload */}
+            <Card className="bg-card shadow-card border-border">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <Upload className="h-5 w-5 text-secondary" />
+                  Reference Post (Optional)
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {!referencePreview ? (
+                  <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
+                    <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Upload a reference image to generate similar designs
+                    </p>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      className="max-w-xs mx-auto"
+                    />
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="relative">
+                      <img 
+                        src={referencePreview} 
+                        alt="Reference" 
+                        className="w-full max-w-xs mx-auto rounded-lg shadow-sm"
+                      />
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="absolute top-2 right-2"
+                        onClick={removeReference}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <p className="text-sm text-muted-foreground text-center">
+                      Reference uploaded - designs will be inspired by this style
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
