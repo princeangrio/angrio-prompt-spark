@@ -362,7 +362,7 @@ ${template.colors}
             {generatedPrompts.length > 0 && <>
                 {/* Action Buttons */}
                 <div className="flex gap-3">
-                  <Button onClick={handleOpenInTabs} className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground">
+                  <Button onClick={handleOpenInTabs} className="flex-1 text-lg text-center bg-orange-600 hover:bg-orange-500 bg-[F36B1C] text-slate-50">
                     <ExternalLink className="h-4 w-4 mr-2" />
                     Open in Tabs
                   </Button>
