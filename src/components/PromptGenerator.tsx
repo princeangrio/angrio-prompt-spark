@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Wand2, ExternalLink, Copy, Brain, Zap, Upload, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
 interface GeneratedPrompt {
   id: string;
   finalCopy: string;
@@ -15,7 +14,6 @@ interface GeneratedPrompt {
   designNotes: string;
   postType: string;
 }
-
 const PromptGenerator = () => {
   const [model, setModel] = useState<string>('gpt-4o');
   const [content, setContent] = useState<string>('');
@@ -24,8 +22,9 @@ const PromptGenerator = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [referenceFile, setReferenceFile] = useState<File | null>(null);
   const [referencePreview, setReferencePreview] = useState<string | null>(null);
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const detectPostType = (content: string): string => {
     const lowerContent = content.toLowerCase();
     if (lowerContent.includes('hiring') || lowerContent.includes('job') || lowerContent.includes('recruit')) return 'hiring';
@@ -34,110 +33,72 @@ const PromptGenerator = () => {
     if (lowerContent.includes('motivation') || lowerContent.includes('inspire') || lowerContent.includes('quote')) return 'motivation';
     return 'general';
   };
-
-  const designTemplates = [
-    {
-      name: "Minimalist Clean",
-      layout: "centered-text",
-      style: "Clean minimalist design with lots of white space, centered text layout, simple sans-serif typography",
-      hero: "subtle geometric shapes or minimal icons",
-      colors: "Primary navy #03224C with white background, minimal orange accents"
-    },
-    {
-      name: "Bold Statement", 
-      layout: "split-diagonal",
-      style: "Bold diagonal split layout, large typography, high contrast design",
-      hero: "dynamic abstract shapes or bold graphics",
-      colors: "Heavy use of orange #FF8828 with navy text, white accents"
-    },
-    {
-      name: "Infographic Style",
-      layout: "grid-sections", 
-      style: "Multi-section grid layout with data visualization elements, charts and icons",
-      hero: "charts, graphs, or data visualization elements",
-      colors: "Navy backgrounds with orange data points and white text"
-    },
-    {
-      name: "Quote Design",
-      layout: "quote-focused",
-      style: "Large quotation marks, elegant typography, quote-focused design",
-      hero: "decorative quotation marks or inspirational imagery",
-      colors: "Navy background with orange quote marks and white text"
-    },
-    {
-      name: "Modern Card",
-      layout: "card-stack",
-      style: "Layered card design with shadows, modern card UI elements",
-      hero: "floating cards or modern UI elements",  
-      colors: "White cards on navy background with orange highlights"
-    },
-    {
-      name: "Split Hero",
-      layout: "left-right-split",
-      style: "50/50 split design with text on left, large visual on right",
-      hero: "large product image or team photo on right side",
-      colors: "Navy left panel, white right panel, orange accents"
-    },
-    {
-      name: "Geometric Modern",
-      layout: "geometric-shapes",
-      style: "Modern geometric shapes, triangles and circles, contemporary design",
-      hero: "geometric patterns, triangles, circles, modern shapes",
-      colors: "Orange geometric shapes on navy background with white text"
-    },
-    {
-      name: "Corporate Professional",
-      layout: "header-body-footer",
-      style: "Traditional corporate layout with clear header, body, footer sections",
-      hero: "professional icons or corporate imagery",
-      colors: "White background with navy headers and orange call-to-actions"
-    },
-    {
-      name: "Creative Artistic",
-      layout: "organic-flow",
-      style: "Organic flowing design, curved elements, artistic and creative",
-      hero: "artistic illustrations or creative graphics",
-      colors: "Gradient backgrounds mixing navy and orange with creative elements"
-    },
-    {
-      name: "Tech Innovation",
-      layout: "tech-grid",
-      style: "High-tech grid design, digital elements, modern technology aesthetic",
-      hero: "tech icons, circuit patterns, or innovation graphics",
-      colors: "Dark navy background with bright orange tech elements and white text"
-    }
-  ];
-
+  const designTemplates = [{
+    name: "Minimalist Clean",
+    layout: "centered-text",
+    style: "Clean minimalist design with lots of white space, centered text layout, simple sans-serif typography",
+    hero: "subtle geometric shapes or minimal icons",
+    colors: "Primary navy #03224C with white background, minimal orange accents"
+  }, {
+    name: "Bold Statement",
+    layout: "split-diagonal",
+    style: "Bold diagonal split layout, large typography, high contrast design",
+    hero: "dynamic abstract shapes or bold graphics",
+    colors: "Heavy use of orange #FF8828 with navy text, white accents"
+  }, {
+    name: "Infographic Style",
+    layout: "grid-sections",
+    style: "Multi-section grid layout with data visualization elements, charts and icons",
+    hero: "charts, graphs, or data visualization elements",
+    colors: "Navy backgrounds with orange data points and white text"
+  }, {
+    name: "Quote Design",
+    layout: "quote-focused",
+    style: "Large quotation marks, elegant typography, quote-focused design",
+    hero: "decorative quotation marks or inspirational imagery",
+    colors: "Navy background with orange quote marks and white text"
+  }, {
+    name: "Modern Card",
+    layout: "card-stack",
+    style: "Layered card design with shadows, modern card UI elements",
+    hero: "floating cards or modern UI elements",
+    colors: "White cards on navy background with orange highlights"
+  }, {
+    name: "Split Hero",
+    layout: "left-right-split",
+    style: "50/50 split design with text on left, large visual on right",
+    hero: "large product image or team photo on right side",
+    colors: "Navy left panel, white right panel, orange accents"
+  }, {
+    name: "Geometric Modern",
+    layout: "geometric-shapes",
+    style: "Modern geometric shapes, triangles and circles, contemporary design",
+    hero: "geometric patterns, triangles, circles, modern shapes",
+    colors: "Orange geometric shapes on navy background with white text"
+  }, {
+    name: "Corporate Professional",
+    layout: "header-body-footer",
+    style: "Traditional corporate layout with clear header, body, footer sections",
+    hero: "professional icons or corporate imagery",
+    colors: "White background with navy headers and orange call-to-actions"
+  }, {
+    name: "Creative Artistic",
+    layout: "organic-flow",
+    style: "Organic flowing design, curved elements, artistic and creative",
+    hero: "artistic illustrations or creative graphics",
+    colors: "Gradient backgrounds mixing navy and orange with creative elements"
+  }, {
+    name: "Tech Innovation",
+    layout: "tech-grid",
+    style: "High-tech grid design, digital elements, modern technology aesthetic",
+    hero: "tech icons, circuit patterns, or innovation graphics",
+    colors: "Dark navy background with bright orange tech elements and white text"
+  }];
   const generateAngrioPrompt = (content: string, index: number): GeneratedPrompt => {
     const postType = detectPostType(content);
     const template = designTemplates[index % designTemplates.length];
-    
-    const headlines = [
-      `🚀 ${content.split(' ').slice(0, 2).join(' ')} Excellence`,
-      `💡 Transform Your ${content.split(' ').slice(1, 3).join(' ')}`,
-      `⭐ Discover ${content.split(' ').slice(0, 3).join(' ')}`,
-      `🎯 Unlock ${content.split(' ').slice(2, 4).join(' ')} Success`,
-      `✨ Elevate Your ${content.split(' ').slice(0, 2).join(' ')}`,
-      `🔥 Revolutionary ${content.split(' ').slice(1, 3).join(' ')}`,
-      `💪 Master ${content.split(' ').slice(0, 3).join(' ')}`,
-      `🌟 Premium ${content.split(' ').slice(2, 4).join(' ')}`,
-      `⚡ Advanced ${content.split(' ').slice(0, 2).join(' ')}`,
-      `🎪 Ultimate ${content.split(' ').slice(1, 4).join(' ')}`
-    ];
-
-    const ctaVariations = [
-      "📞 Contact Angrio Technologies Today",
-      "🚀 Start Your Journey with Angrio",
-      "💼 Partner with Angrio Technologies", 
-      "📧 Get in Touch with Our Experts",
-      "🎯 Schedule Your Consultation Now",
-      "✨ Join the Angrio Family",
-      "💡 Discover Angrio Solutions",
-      "🔗 Connect with Angrio Team",
-      "📱 Reach Out to Angrio Today",
-      "🌟 Experience Angrio Excellence"
-    ];
-    
+    const headlines = [`🚀 ${content.split(' ').slice(0, 2).join(' ')} Excellence`, `💡 Transform Your ${content.split(' ').slice(1, 3).join(' ')}`, `⭐ Discover ${content.split(' ').slice(0, 3).join(' ')}`, `🎯 Unlock ${content.split(' ').slice(2, 4).join(' ')} Success`, `✨ Elevate Your ${content.split(' ').slice(0, 2).join(' ')}`, `🔥 Revolutionary ${content.split(' ').slice(1, 3).join(' ')}`, `💪 Master ${content.split(' ').slice(0, 3).join(' ')}`, `🌟 Premium ${content.split(' ').slice(2, 4).join(' ')}`, `⚡ Advanced ${content.split(' ').slice(0, 2).join(' ')}`, `🎪 Ultimate ${content.split(' ').slice(1, 4).join(' ')}`];
+    const ctaVariations = ["📞 Contact Angrio Technologies Today", "🚀 Start Your Journey with Angrio", "💼 Partner with Angrio Technologies", "📧 Get in Touch with Our Experts", "🎯 Schedule Your Consultation Now", "✨ Join the Angrio Family", "💡 Discover Angrio Solutions", "🔗 Connect with Angrio Team", "📱 Reach Out to Angrio Today", "🌟 Experience Angrio Excellence"];
     return {
       id: `prompt-${Date.now()}-${index}`,
       postType,
@@ -148,7 +109,6 @@ ${content}
 ${ctaVariations[index]}
 
 #AngrioTech #Innovation #Technology #${template.name.replace(' ', '')}`,
-      
       imagePrompt: `Create a professional 1080x1080px social media post using "${template.name}" design template.
 
 LAYOUT STYLE: ${template.layout}
@@ -168,7 +128,6 @@ COLOR SCHEME: ${template.colors}
 COMPOSITION: Use ${template.layout} layout approach with professional ${template.style.toLowerCase()}. Make this design distinctly different from other social media posts with unique visual hierarchy and element positioning.
 
 BRAND ELEMENTS: Include Angrio Technologies branding while maintaining the ${template.name} aesthetic. Ensure this design stands out as completely different from minimalist or standard corporate posts.`,
-      
       designNotes: `📐 DESIGN SPECIFICATION - ${template.name.toUpperCase()}:
 
 🎨 TEMPLATE: ${template.name}
@@ -197,7 +156,6 @@ ${template.colors}
 ⚡ UNIQUENESS FACTOR: This design should be immediately distinguishable from other Angrio posts through its ${template.name.toLowerCase()} approach and ${template.layout} layout system.`
     };
   };
-
   const handleGeneratePrompts = async () => {
     if (!content.trim()) {
       toast({
@@ -207,105 +165,88 @@ ${template.colors}
       });
       return;
     }
-
     setIsGenerating(true);
-    
+
     // Simulate AI generation delay
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
     const prompts: GeneratedPrompt[] = [];
     for (let i = 0; i < parseInt(quantity); i++) {
       prompts.push(generateAngrioPrompt(content, i));
     }
-    
     setGeneratedPrompts(prompts);
     setIsGenerating(false);
-    
     toast({
       title: "Prompts Generated!",
-      description: `Successfully created ${quantity} unique Angrio post prompts.`,
+      description: `Successfully created ${quantity} unique Angrio post prompts.`
     });
   };
-
   const handleOpenInTabs = () => {
     if (generatedPrompts.length === 0) {
       toast({
         title: "No prompts generated",
         description: "Please generate prompts first",
-        variant: "destructive",
+        variant: "destructive"
       });
       return;
     }
-
     const selectedQuantity = parseInt(quantity);
     const promptsToOpen = generatedPrompts.slice(0, selectedQuantity);
-    
     promptsToOpen.forEach((prompt, index) => {
       const fullPrompt = `${prompt.finalCopy}\n\n${prompt.imagePrompt}\n\n${prompt.designNotes}`;
       const encodedPrompt = encodeURIComponent(fullPrompt);
       const chatUrl = `https://chatgpt.com/?q=${encodedPrompt}`;
-      
+
       // Delay each tab opening to prevent browser blocking
       setTimeout(() => {
         window.open(chatUrl, `_blank_${index}`);
       }, index * 500);
     });
-
     toast({
       title: "Opening Prompts",
-      description: `Opening ${selectedQuantity} tabs with your generated prompts.`,
+      description: `Opening ${selectedQuantity} tabs with your generated prompts.`
     });
   };
-
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       if (file.type.startsWith('image/')) {
         setReferenceFile(file);
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = e => {
           setReferencePreview(e.target?.result as string);
         };
         reader.readAsDataURL(file);
-        
         toast({
           title: "Reference uploaded",
-          description: "Reference image will be used to generate similar designs.",
+          description: "Reference image will be used to generate similar designs."
         });
       } else {
         toast({
           title: "Invalid file",
           description: "Please upload an image file (JPG, PNG, etc.)",
-          variant: "destructive",
+          variant: "destructive"
         });
       }
     }
   };
-
   const removeReference = () => {
     setReferenceFile(null);
     setReferencePreview(null);
   };
-
   const copyAllPrompts = () => {
-    const allPrompts = generatedPrompts.map((prompt, index) => 
-      `=== PROMPT ${index + 1} ===\n\n1️⃣ FINAL COPY\n${prompt.finalCopy}\n\n2️⃣ IMAGE PROMPT\n${prompt.imagePrompt}\n\n3️⃣ DESIGN NOTES\n${prompt.designNotes}\n\n`
-    ).join('\n');
-    
+    const allPrompts = generatedPrompts.map((prompt, index) => `=== PROMPT ${index + 1} ===\n\n1️⃣ FINAL COPY\n${prompt.finalCopy}\n\n2️⃣ IMAGE PROMPT\n${prompt.imagePrompt}\n\n3️⃣ DESIGN NOTES\n${prompt.designNotes}\n\n`).join('\n');
     navigator.clipboard.writeText(allPrompts);
     toast({
       title: "Copied!",
-      description: "All prompts copied to clipboard.",
+      description: "All prompts copied to clipboard."
     });
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-background">
+  return <div className="min-h-screen bg-gradient-background">
       <div className="container mx-auto px-6 py-8 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-foreground mb-3">
-            <span className="text-secondary">Angrio's</span> AI Graphic Designer
+            <span className="text-secondary font-extrabold">Angrio's</span> AI Graphic Designer
           </h1>
           <p className="text-muted-foreground text-lg">
             Generate professional post design prompts with Angrio's brand guidelines
@@ -345,12 +286,7 @@ ${template.colors}
                 <CardTitle className="text-foreground">Describe Your Post Idea or Campaign</CardTitle>
               </CardHeader>
               <CardContent>
-                <Textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="e.g., Create a hiring post for a female telecaller position with competitive salary and growth opportunities..."
-                  className="min-h-[120px] bg-input border-border text-foreground placeholder:text-muted-foreground"
-                />
+                <Textarea value={content} onChange={e => setContent(e.target.value)} placeholder="e.g., Create a hiring post for a female telecaller position with competitive salary and growth opportunities..." className="min-h-[120px] bg-input border-border text-foreground placeholder:text-muted-foreground" />
                 <p className="text-sm text-muted-foreground mt-2">
                   Auto-assigns Angrio layout, fonts, color palette, and post type
                 </p>
@@ -366,41 +302,23 @@ ${template.colors}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {!referencePreview ? (
-                  <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
+                {!referencePreview ? <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
                     <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
                     <p className="text-sm text-muted-foreground mb-3">
                       Upload a reference image to generate similar designs
                     </p>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileUpload}
-                      className="max-w-xs mx-auto"
-                    />
-                  </div>
-                ) : (
-                  <div className="space-y-3">
+                    <Input type="file" accept="image/*" onChange={handleFileUpload} className="max-w-xs mx-auto" />
+                  </div> : <div className="space-y-3">
                     <div className="relative">
-                      <img 
-                        src={referencePreview} 
-                        alt="Reference" 
-                        className="w-full max-w-xs mx-auto rounded-lg shadow-sm"
-                      />
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="absolute top-2 right-2"
-                        onClick={removeReference}
-                      >
+                      <img src={referencePreview} alt="Reference" className="w-full max-w-xs mx-auto rounded-lg shadow-sm" />
+                      <Button size="sm" variant="destructive" className="absolute top-2 right-2" onClick={removeReference}>
                         <X className="h-4 w-4" />
                       </Button>
                     </div>
                     <p className="text-sm text-muted-foreground text-center">
                       Reference uploaded - designs will be inspired by this style
                     </p>
-                  </div>
-                )}
+                  </div>}
               </CardContent>
             </Card>
 
@@ -419,32 +337,21 @@ ${template.colors}
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {[1,2,3,4,5,6,7,8,9,10].map(num => (
-                        <SelectItem key={num} value={num.toString()}>
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => <SelectItem key={num} value={num.toString()}>
                           {num} prompt{num > 1 ? 's' : ''}
-                        </SelectItem>
-                      ))}
+                        </SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
 
-                <Button 
-                  onClick={handleGeneratePrompts}
-                  disabled={isGenerating || !content.trim()}
-                  className="w-full bg-gradient-secondary hover:bg-secondary/90 text-secondary-foreground shadow-button"
-                  size="lg"
-                >
-                  {isGenerating ? (
-                    <>
+                <Button onClick={handleGeneratePrompts} disabled={isGenerating || !content.trim()} className="w-full bg-gradient-secondary hover:bg-secondary/90 text-secondary-foreground shadow-button" size="lg">
+                  {isGenerating ? <>
                       <Zap className="h-4 w-4 mr-2 animate-spin" />
                       Generating Prompts...
-                    </>
-                  ) : (
-                    <>
+                    </> : <>
                       <Wand2 className="h-4 w-4 mr-2" />
                       Create Prompts
-                    </>
-                  )}
+                    </>}
                 </Button>
               </CardContent>
             </Card>
@@ -452,22 +359,14 @@ ${template.colors}
 
           {/* Output Section */}
           <div className="space-y-6">
-            {generatedPrompts.length > 0 && (
-              <>
+            {generatedPrompts.length > 0 && <>
                 {/* Action Buttons */}
                 <div className="flex gap-3">
-                  <Button 
-                    onClick={handleOpenInTabs}
-                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
-                  >
+                  <Button onClick={handleOpenInTabs} className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground">
                     <ExternalLink className="h-4 w-4 mr-2" />
                     Open in Tabs
                   </Button>
-                  <Button 
-                    onClick={copyAllPrompts}
-                    variant="outline"
-                    className="border-border hover:bg-muted"
-                  >
+                  <Button onClick={copyAllPrompts} variant="outline" className="border-border hover:bg-muted">
                     <Copy className="h-4 w-4 mr-2" />
                     Copy All
                   </Button>
@@ -475,8 +374,7 @@ ${template.colors}
 
                 {/* Generated Prompts */}
                 <div className="space-y-4 max-h-[600px] overflow-y-auto">
-                  {generatedPrompts.map((prompt, index) => (
-                    <Card key={prompt.id} className="bg-card shadow-card border-border">
+                  {generatedPrompts.map((prompt, index) => <Card key={prompt.id} className="bg-card shadow-card border-border">
                       <CardHeader className="pb-4">
                         <div className="flex items-center justify-between">
                           <CardTitle className="text-lg text-foreground">
@@ -509,14 +407,11 @@ ${template.colors}
                           </div>
                         </div>
                       </CardContent>
-                    </Card>
-                  ))}
+                    </Card>)}
                 </div>
-              </>
-            )}
+              </>}
 
-            {generatedPrompts.length === 0 && (
-              <Card className="bg-card shadow-card border-border">
+            {generatedPrompts.length === 0 && <Card className="bg-card shadow-card border-border">
                 <CardContent className="text-center py-12">
                   <Wand2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-foreground mb-2">
@@ -526,13 +421,10 @@ ${template.colors}
                     Enter your post description and click "Create Prompts" to get started
                   </p>
                 </CardContent>
-              </Card>
-            )}
+              </Card>}
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default PromptGenerator;
